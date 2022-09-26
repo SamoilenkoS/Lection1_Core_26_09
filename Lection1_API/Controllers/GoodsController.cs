@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Lection1_API.Services;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace Lection1_API.Controllers
     [Route("[controller]")]
     public class GoodsController : ControllerBase
     {
+        private readonly IGoodsService _goodsService;
         private static List<Good> _goods;
 
         static GoodsController()
@@ -26,14 +28,15 @@ namespace Lection1_API.Controllers
             };
         }
 
-        public GoodsController()
+        public GoodsController(IGoodsService goodsService)
         {
+            _goodsService = goodsService;
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            return Ok(_goods);
+            return Ok(await _goodsService.GetAll());
         }
 
         [HttpGet("{id}")]
